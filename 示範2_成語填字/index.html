@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>成語填字｜互動字帖</title>
+  <style>
+    :root { --ink:#253145; --paper:#fff9e9; --red:#ae3029; --gold:#c59b54; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100dvh; color:var(--ink); font-family:"Noto Serif TC","Microsoft JhengHei",serif; background:#eee1c6 url('assets/images/study-bg.png') center/cover fixed; }
+    body::before { content:""; position:fixed; inset:0; background:rgba(255,249,234,.42); pointer-events:none; }
+    main { position:relative; z-index:1; width:min(880px,94vw); margin:auto; padding:18px 0 36px; }
+    header { text-align:center; }
+    .title-art { width:min(620px,96%); display:block; margin:0 auto -58px; position:relative; z-index:2; filter:drop-shadow(0 7px 5px #5a40283d); }
+    .game-book { position:relative; padding:90px clamp(18px,5vw,54px) 30px; background:linear-gradient(105deg,rgba(255,253,240,.95),rgba(248,235,201,.97)); border:2px solid #b38b4f; box-shadow:0 12px 35px #49331f72, inset 0 0 32px #b9955650; border-radius:10px; }
+    .game-book::after { content:""; position:absolute; inset:9px; border:1px dashed #b69257a0; border-radius:5px; pointer-events:none; }
+    .topline,.progress { display:flex; justify-content:space-between; gap:12px; align-items:center; position:relative; z-index:1; font-weight:700; }
+    .badge { background:#31425a; color:#fffbed; padding:6px 13px; border-radius:99px; font-size:.92rem; }
+    .progress { margin-top:8px; color:#6d5636; font-size:.93rem; }
+    .bar { flex:1; height:9px; background:#dfceb0; border-radius:99px; overflow:hidden; }
+    .bar span { display:block; height:100%; width:0; background:linear-gradient(90deg,#55756d,#91aa82); transition:.3s; }
+    .question { text-align:center; margin:34px 0 10px; color:#624d30; font-size:1.04rem; }
+    .idiom { display:flex; justify-content:center; align-items:center; gap:clamp(5px,1.8vw,15px); min-height:130px; font-size:clamp(2.4rem,8vw,4.5rem); color:#1e2938; font-weight:700; }
+    .fixed { padding:8px 3px; }
+    .slot { width:1.27em; height:1.27em; display:grid; place-items:center; border:3px solid #6c8391; color:#223044; background-color:#fffdf5; cursor:pointer; position:relative; box-shadow:inset 0 0 0 2px #fffdf5, inset 0 0 0 3px #a0b2b3; background-image:linear-gradient(#b9c7c7 1px,transparent 1px),linear-gradient(90deg,#b9c7c7 1px,transparent 1px),linear-gradient(45deg,transparent 49%,#c9d2cf 50%,transparent 51%),linear-gradient(-45deg,transparent 49%,#c9d2cf 50%,transparent 51%); background-size:50% 50%,50% 50%,100% 100%,100% 100%; }
+    .slot.over { outline:4px solid #e1b862; transform:scale(1.05); } .slot.locked { border-color:#496e63; cursor:default; }
+    .slot.stamped::after { content:"✓"; position:absolute; color:#a92323; border:3px solid #a92323; width:.76em; height:.76em; border-radius:4px; display:grid; place-items:center; font-size:.48em; font-family:sans-serif; font-weight:bold; transform:rotate(-12deg); background:#f4d0bfcc; animation:stamp .38s ease-out; }
+    @keyframes stamp { from { transform:scale(2.6) rotate(10deg); opacity:0; } to { transform:scale(1) rotate(-12deg); opacity:1; } }
+    .hint { min-height:29px; text-align:center; margin:4px 0 18px; color:#895235; font-weight:bold; } .hint.error { color:#b02b28; }
+    .cards-label { text-align:center; font-size:.94rem; color:#6d5636; margin:8px; }
+    .cards { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; min-height:68px; position:relative; z-index:1; }
+    .card { border:0; min-width:58px; height:58px; padding:0 14px; font:700 1.72rem/1 "KaiTi","DFKai-SB",serif; color:#263545; cursor:grab; background:#fff9e8; border-radius:2px 7px 3px 6px; box-shadow:2px 3px 5px #56432d75; border-top:2px solid #f2e4bd; transition:transform .15s,box-shadow .15s; }
+    .card:nth-child(even) { transform:rotate(1.4deg); } .card:nth-child(3n) { transform:rotate(-1.2deg); } .card:hover,.card.selected { outline:3px solid #d9a94f; transform:translateY(-4px) rotate(0); box-shadow:3px 7px 9px #56432d75; } .card.used { visibility:hidden; }
+    .next { display:block; margin:20px auto 0; border:0; border-radius:7px; background:#314d51; color:#fffbed; padding:11px 22px; font:700 1.05rem inherit; cursor:pointer; box-shadow:0 3px 0 #1c3030; } .next:hover { background:#466b69; } .next:active { transform:translateY(2px); box-shadow:0 1px 0 #1c3030; }
+    .explanation { display:none; position:relative; z-index:2; margin:17px auto 4px; max-width:620px; padding:18px 23px; background:#f4e2b9; border-left:7px solid var(--red); box-shadow:inset 0 0 12px #a878493d; text-align:left; line-height:1.75; } .explanation.show { display:block; } .explanation strong { color:#9c2c27; font-size:1.18rem; }
+    .result { display:none; text-align:center; position:relative; z-index:3; padding:16px 0 0; } .result.show { display:block; } .result h2 { color:#9d3029; font-size:1.7rem; margin:8px; } .result .score { font-size:2.4rem; font-weight:bold; color:#344f55; }
+    .hidden { display:none!important; }
+    @media (max-width:560px) { main { width:96vw; padding-top:8px; } .title-art { margin-bottom:-34px; } .game-book { padding:60px 14px 24px; } .idiom { min-height:100px; } .card { min-width:52px; height:52px; } }
+  </style>
+  <style>.map-back{position:fixed;z-index:20;top:14px;left:14px;border:2px solid #9b3d31;border-radius:999px;padding:9px 13px;background:#fff7dc;color:#7a2e27;font:700 15px "Microsoft JhengHei",sans-serif;text-decoration:none;box-shadow:0 3px 0 #d89a76}.map-back:hover{transform:translateY(-1px)}</style>
+</head>
+<body>
+<a class="map-back" href="../大冒險地圖/index.html">← 回到大地圖</a>
+<main>
+  <header><img class="title-art" src="assets/images/title-stationery.png" alt="成語填字：毛筆、硯台、卷軸與紅色印章的手繪標題牌"></header>
+  <section class="game-book" aria-live="polite">
+    <div id="playArea">
+      <div class="topline"><span class="badge">互動成語字帖</span><span id="round">第 1 / 5 題</span></div>
+      <div class="progress"><span>學習進度</span><div class="bar"><span id="barFill"></span></div><span id="correctCount">0 題完成</span></div>
+      <p class="question">請把正確的字放入米字格中</p>
+      <div class="idiom" id="idiom" aria-label="成語填字區"></div>
+      <div id="hint" class="hint">可拖曳字卡，或先點字卡再點空格。</div>
+      <p class="cards-label">選字小紙片</p><div id="cards" class="cards"></div>
+      <div id="explanation" class="explanation"></div>
+      <button id="nextBtn" class="next hidden">下一題</button>
+    </div>
+    <div id="result" class="result"><h2>字帖完成！</h2><p>你完成了 5 題成語填字</p><div class="score" id="score"></div><p id="encourage"></p><button class="next" id="restartBtn">重新開始</button></div>
+  </section>
+</main>
+<script>
+const bank=[
+ {idiom:'一鳴驚人', blanks:[1,3], meaning:'比喻平時沒有特殊表現，一旦行動就有驚人的成績。'},
+ {idiom:'井底之蛙', blanks:[0,2], meaning:'比喻見識淺薄、眼界狹小的人。'},
+ {idiom:'畫蛇添足', blanks:[1,3], meaning:'比喻多此一舉，反而壞事。'},
+ {idiom:'守株待兔', blanks:[0,2], meaning:'比喻不知變通，妄想不勞而獲。'},
+ {idiom:'胸有成竹', blanks:[1,3], meaning:'比喻做事前已有完整的計畫與把握。'},
+ {idiom:'水落石出', blanks:[0,2], meaning:'比喻事情真相完全顯露。'},
+ {idiom:'自相矛盾', blanks:[1,3], meaning:'比喻言行或想法互相衝突。'},
+ {idiom:'刻舟求劍', blanks:[0,2], meaning:'比喻拘泥成法，不知變通。'},
+ {idiom:'對牛彈琴', blanks:[1,3], meaning:'比喻對不懂道理的人講道理，白費口舌。'},
+ {idiom:'揠苗助長', blanks:[0,2], meaning:'比喻急於求成，反而壞事。'}
+];
+let questions=[],index=0,score=0,selected=null,filled=0;
+const $=id=>document.getElementById(id), shuffle=a=>[...a].sort(()=>Math.random()-.5);
+function start(){ questions=shuffle(bank).slice(0,5); index=0; score=0; $('result').classList.remove('show'); $('playArea').classList.remove('hidden'); render(); }
+function render(){ const q=questions[index], chars=[...q.idiom]; selected=null; filled=0; $('round').textContent=`第 ${index+1} / 5 題`; $('correctCount').textContent=`${score} 題完成`; $('barFill').style.width=`${index/5*100}%`; $('hint').textContent='可拖曳字卡，或先點字卡再點空格。'; $('hint').className='hint'; $('explanation').className='explanation'; $('nextBtn').classList.add('hidden');
+ $('idiom').innerHTML=chars.map((c,i)=>q.blanks.includes(i)?`<button class="slot" data-pos="${i}" aria-label="第 ${i+1} 個字的空格"></button>`:`<span class="fixed">${c}</span>`).join('');
+ const choices=shuffle([...q.blanks.map(i=>chars[i]),...pickDistractors(chars,q.blanks)]); $('cards').innerHTML=choices.map(c=>`<button class="card" draggable="true" data-char="${c}" aria-label="字卡 ${c}">${c}</button>`).join('');
+ document.querySelectorAll('.card').forEach(card=>{ card.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',card.dataset.char)); card.addEventListener('click',()=>selectCard(card)); });
+ document.querySelectorAll('.slot').forEach(slot=>{ slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('over')}); slot.addEventListener('dragleave',()=>slot.classList.remove('over')); slot.addEventListener('drop',e=>{e.preventDefault();slot.classList.remove('over');place(e.dataTransfer.getData('text/plain'),slot)}); slot.addEventListener('click',()=>{if(selected) place(selected.dataset.char,slot)}); }); }
+function pickDistractors(chars,blanks){ const pool='山海風雨春秋日月天地人心口手足眼耳花草雲星光明暗高遠近大小前後左右'.split('').filter(c=>!chars.includes(c)); return shuffle(pool).slice(0,4); }
+function selectCard(card){ if(card.classList.contains('used'))return; document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected')); selected=card; card.classList.add('selected'); $('hint').textContent=`已選「${card.dataset.char}」，請點選一個米字格。`; }
+function place(char,slot){ if(slot.classList.contains('locked'))return; const q=questions[index],pos=Number(slot.dataset.pos),card=[...document.querySelectorAll('.card')].find(c=>c.dataset.char===char&&!c.classList.contains('used')); if(char===q.idiom[pos]){ slot.textContent=char; slot.classList.add('locked','stamped'); card?.classList.add('used'); filled++; selected=null; $('hint').className='hint'; $('hint').textContent=filled===2?'兩字都答對了，請閱讀成語解釋！':'答對了！紅印章已蓋下。'; if(filled===2) complete(); } else { selected=null; document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected')); $('hint').className='hint error'; $('hint').textContent='這個字不適合這一格，請再想想看！'; slot.animate([{transform:'translateX(-7px)'},{transform:'translateX(7px)'},{transform:'translateX(0)'}],{duration:220}); } }
+function complete(){ score++; $('correctCount').textContent=`${score} 題完成`; $('barFill').style.width=`${(index+1)/5*100}%`; const q=questions[index]; $('explanation').innerHTML=`<strong>${q.idiom}</strong><br>${q.meaning}`; $('explanation').classList.add('show'); $('nextBtn').textContent=index===4?'看成績':'下一題'; $('nextBtn').classList.remove('hidden'); }
+$('nextBtn').addEventListener('click',()=>{index++; if(index<5)render();else finish();});
+function finish(){ $('playArea').classList.add('hidden'); $('score').textContent=`${score} / 5 題`; $('encourage').textContent=score===5?'太棒了！你是成語小秀才！':'完成練習很棒，再玩一次挑戰滿分吧！'; $('result').classList.add('show'); }
+$('restartBtn').addEventListener('click',start); const originalFinish=finish; finish=function(){originalFinish();localStorage.setItem('cert_idiom','true')}; start();
+</script>
+</body></html>

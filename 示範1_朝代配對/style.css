@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap');
+
+:root { --ink:#493528; --red:#a72d24; --gold:#d69a42; --paper:#fff5df; --jade:#4b766a; }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--ink); font-family:"Noto Serif TC","Microsoft JhengHei",serif; background:#ead7ad url("assets/images/adventure-map.png") center/cover fixed; min-height:100vh; }
+body::before { content:""; position:fixed; inset:0; background:rgba(255,246,223,.62); pointer-events:none; z-index:-1; }
+button { font:inherit; cursor:pointer; }
+.game-shell { max-width:1420px; margin:auto; padding:18px clamp(12px,3vw,42px) 42px; }
+.hero { text-align:center; }
+.title-sign { display:block; width:min(600px,94vw); margin:0 auto -25px; filter:drop-shadow(0 6px 4px rgba(78,48,26,.25)); }
+.hero p { margin:0; font-weight:700; font-size:clamp(1rem,2vw,1.22rem); text-shadow:0 1px #fff6e6; }
+.progress { display:inline-block; margin:12px 0 8px; padding:5px 18px; color:#fff7e2; background:var(--jade); border:2px solid #f5cd77; border-radius:999px; box-shadow:0 2px 0 #294d44; }
+.instructions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 22px; font-size:.92rem; margin:0 auto 16px; color:#634735; }
+.game-layout { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(270px,.9fr); gap:22px; align-items:start; }
+.dynasty-area,.event-area { background:rgba(255,249,230,.86); border:2px solid #b98b50; border-radius:20px; box-shadow:0 5px 0 rgba(105,68,35,.2), inset 0 0 0 5px rgba(255,255,255,.4); padding:16px; }
+h2 { margin:0; font-size:1.34rem; color:#763c26; }
+.dynasty-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:12px; }
+.dynasty-card { position:relative; overflow:hidden; min-height:220px; border:2px solid #8c603a; border-radius:14px; background:#f9e5b8 center/cover; box-shadow:0 3px 0 #c59b61; transition:.18s ease; }
+.dynasty-card.drag-over { transform:translateY(-3px); border-color:var(--red); box-shadow:0 5px 0 #c59b61,0 0 0 4px rgba(167,45,36,.22); }
+.dynasty-card.correct { border-color:#946524; }
+.dynasty-card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(255,249,228,.1),rgba(31,22,13,.23)); pointer-events:none; }
+.dynasty-label { position:absolute; z-index:1; top:10px; left:10px; margin:0; padding:2px 12px; font-size:1.35rem; color:#fff8e6; background:#70432d; border:1px solid #f4cb79; border-radius:5px; text-shadow:1px 1px #351d12; }
+.drop-zone { position:absolute; z-index:2; left:8px; right:8px; bottom:8px; min-height:84px; padding:5px; border:2px dashed rgba(85,51,27,.6); border-radius:10px; background:rgba(255,247,221,.72); display:flex; flex-direction:column; gap:5px; justify-content:center; }
+.drop-zone:empty::before { content:"放這裡"; align-self:center; color:#7a6250; font-size:.85rem; }
+.event-heading { display:flex; justify-content:space-between; align-items:center; gap:6px; }
+#restart { font-size:.85rem; padding:5px 9px; color:#713c24; background:#f7d58d; border:1px solid #a6743c; border-radius:7px; }
+.selection-tip { min-height:1.55em; margin:9px 0; color:#755845; font-size:.92rem; }
+.event-pile { display:grid; gap:10px; }
+.scroll { position:relative; padding:14px 17px; color:#533725; background:linear-gradient(90deg,#c79557 0 4%,#fff3d2 10%,#f8e0a7 50%,#fff3d2 90%,#c79557 100%); border:1px solid #966139; border-radius:6px; box-shadow:0 3px 0 #c3925b; font-weight:700; line-height:1.38; text-align:left; touch-action:manipulation; transition:.15s ease; }
+.scroll::before,.scroll::after { content:""; position:absolute; top:-3px; bottom:-3px; width:8px; border-radius:5px; background:#b77d42; border:1px solid #80502c; }
+.scroll::before { left:-4px; }.scroll::after { right:-4px; }
+.scroll:hover,.scroll.selected { transform:translateY(-2px) rotate(-.5deg); outline:3px solid rgba(167,45,36,.42); }
+.scroll.placed { font-size:.78rem; padding:7px 10px; box-shadow:0 1px 0 #c3925b; cursor:default; }
+.seal { display:flex; align-items:center; justify-content:center; width:56px; height:56px; border:4px double currentColor; border-radius:50%; color:var(--red); font-weight:900; transform:rotate(-12deg); background:rgba(255,240,218,.32); text-shadow:0 1px #fff; }
+.card-seal { position:absolute; z-index:3; right:10px; top:10px; animation:stamp .35s ease-out; }
+@keyframes stamp { from { transform:scale(1.9) rotate(10deg); opacity:0; } to { transform:scale(1) rotate(-12deg); opacity:1; } }
+.toast { position:fixed; z-index:10; top:18px; left:50%; transform:translate(-50%,-130px); padding:11px 18px; color:white; font-weight:700; background:#71442b; border:2px solid #f4ca72; border-radius:999px; box-shadow:0 4px 12px #55402c55; transition:transform .25s; }.toast.show { transform:translate(-50%,0); }.toast.error { background:#a63c31; }
+.modal { display:none; position:fixed; inset:0; z-index:20; place-items:center; background:rgba(45,29,18,.55); padding:20px; }.modal.open { display:grid; }
+.modal-card { width:min(400px,100%); text-align:center; background:#fff1ce; border:5px double #aa7140; border-radius:20px; padding:28px; box-shadow:0 12px 30px #22160d88; }.big-seal { width:96px; height:96px; margin:0 auto 10px; font-size:1.3rem; }.modal-card h2 { font-size:2rem; }.modal-card button { padding:10px 25px; color:#fff9e8; font-weight:900; background:#8e4a2e; border:2px solid #e6b663; border-radius:9px; }
+@media (max-width:850px) { .game-layout { grid-template-columns:1fr; }.event-area { order:-1; }.event-pile { grid-template-columns:repeat(2,minmax(0,1fr)); }.scroll { font-size:.9rem; } }
+@media (max-width:570px) { .game-shell { padding:6px 9px 26px; }.title-sign { margin-bottom:-14px; }.dynasty-area,.event-area { padding:11px; border-radius:14px; }.dynasty-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }.dynasty-card { min-height:184px; }.dynasty-label { font-size:1.12rem; }.event-pile { gap:8px; }.scroll { padding:11px 12px; font-size:.84rem; }.instructions { font-size:.8rem; } }

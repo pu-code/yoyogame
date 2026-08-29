@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>古今對對碰｜朝代配對</title>
+  <link rel="stylesheet" href="style.css">
+  <style>.map-back{position:fixed;z-index:20;top:14px;left:14px;border:2px solid #8c5938;border-radius:999px;padding:9px 13px;background:#fff7db;color:#5e3823;font:700 15px "Microsoft JhengHei",sans-serif;text-decoration:none;box-shadow:0 3px 0 #c99662}.map-back:hover{transform:translateY(-1px)}</style>
+</head>
+<body>
+  <a class="map-back" href="../大冒險地圖/index.html">← 回到大地圖</a>
+  <main class="game-shell">
+    <header class="hero">
+      <img class="title-sign" src="assets/images/title.png" alt="古今對對碰">
+      <p>把右方的歷史事件卷軸，拖曳到正確的朝代吧！</p>
+      <div class="progress" aria-live="polite"><span id="score">0</span> / 12 已配對</div>
+    </header>
+
+    <section class="instructions" aria-label="操作說明">
+      <span>🖱️ 電腦：拖曳卷軸</span><span>📱 手機：先點卷軸，再點朝代卡</span>
+    </section>
+
+    <div class="game-layout">
+      <section class="dynasty-area" aria-label="朝代卡格">
+        <h2>朝代地圖</h2>
+        <div id="dynastyGrid" class="dynasty-grid"></div>
+      </section>
+      <section class="event-area" aria-label="待配對的歷史事件">
+        <div class="event-heading"><h2>事件卷軸</h2><button id="restart" type="button">重新洗牌</button></div>
+        <p id="selectionTip" class="selection-tip">請挑一張卷軸開始！</p>
+        <div id="eventPile" class="event-pile"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="winModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+      <div class="seal big-seal">全對！</div>
+      <h2 id="winTitle">恭喜過關！</h2>
+      <p>你已完成 12 個朝代事件配對。</p>
+      <button id="playAgain" type="button">再玩一次</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script>new MutationObserver(()=>{if(document.getElementById('winModal').classList.contains('open'))localStorage.setItem('cert_dynasty','true')}).observe(document.getElementById('winModal'),{attributes:true,attributeFilter:['class']});</script>
+</body>
+</html>
